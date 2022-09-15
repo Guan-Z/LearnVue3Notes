@@ -1,0 +1,176 @@
+### Vue2的不足：
+
+先看看Vue2：
+
+![image-20220914174703597](C:\Users\Dell\AppData\Roaming\Typora\typora-user-images\image-20220914174703597.png)
+
+* Vue 2 响应式并不是真正意义上的代理，而是基于 Object.defineProperty() 实现的。对于 Object.defineProperty() 这个 API 的细节，在后面讲源码时会讲到，现在只需要知道这个 API 并不是代理，而是对某个属性进行拦截，所以有很多缺陷，比如：删除数据就无法监听，需要 $delete 等 API 辅助才能监听到。
+
+* Option API 在组织代码较多组件的时候不易维护。对于 Option API 来说，所有的 methods、computed 都在一个对象里配置，这对小应用来说还好。但代码超过 300 行的时候，新增或者修改一个功能，就需要不停地在 data，methods 里跳转写代码，我称之为上下反复横跳。
+
+* Vue 2 是使用 Flow.js 来做类型校验。但现在 Flow.js 已经停止维护了，整个社区都在全面使用 TypeScript 来构建基础库，Vue 团队也不例外；所以Vue 3 使用了TS。
+
+
+
+Vue 3 就是继承了 Vue 2 具有的响应式、虚拟 DOM，组件化等所有优秀的特点，并且全部重新设计，解决了这些历史包袱的新框架，是一个拥抱未来的前端框架。
+
+<hr>
+
+### 从七个方面了解 Vue 3 新特性
+
+Vue 3 新特性，将分成 7 个具体方面介绍。其中，**响应式系统、Composition API 组合语法、新的组件和 Vite **是需要重视的；自定义渲染器这方面的知识，你想用 Vue 开发跨端应用时会用到；如果你想对 Vue 源码作出贡献，RFC 机制你也需要好好研究，并且得对 TypeScript 重构有很好的经验。
+
+#### RFC 机制(了解)
+
+想对 Vue 源码作出贡献，RFC 机制你也需要好好研究；显然现在不能
+
+
+
+#### 响应式系统*(之后学习的重点)
+
+Vue 2 的响应式机制是基于**Object.defineProperty() **这个 API 实现的
+
+Vue 3 的响应机制则是基于**Proxy**
+
+区别：
+
+```
+Object.defineProperty(obj, 'title', {
+  get() {},
+  set() {},
+})
+```
+
+当项目里“读取 obj.title”和“修改 obj.title”的时候被 defineProperty 拦截，**但 defineProperty 对不存在的属性无法拦截，所以 Vue 2 中所有数据必须要在 data 里声明。**
+
+```
+new Proxy(obj, {
+  get() { },
+  set() { },
+})
+```
+
+Proxy 这个 API 就是真正的代理；虽然 Proxy 拦截 obj 这个数据，**但 obj 具体是什么属性，Proxy 则不关心，统一都拦截了。而且 Proxy 还可以监听更多的数据格式，比如 Set、Map，这是 Vue 2 做不到的。**
+
+缺点：Proxy是浏览器新特性，IE11以下不支持；（微软公布2022年6月15日晚上9点永久关闭，去他的兼容）
+
+也就是Vue 3 响应式没有缺点
+
+前端框架利用浏览器的新特性来完善自己，才会让前端这个生态更繁荣，抛弃旧的浏览器是早晚的事。
+
+后面课时会手写一个Vue 3 响应式，帮助深入理解。
+
+
+
+#### 自定义渲染器(了解)
+
+Vue 2 内部所有的模块都是揉在一起的，导致扩展性不好
+
+Vue 3 是怎么解决这个问题的呢？那就是拆包，使用最近流行的 monorepo 管理方式，响应式、编译和运行时全部独立了，变成下图所示的模样：
+
+![image-20220915095550005](C:\Users\Dell\AppData\Roaming\Typora\typora-user-images\image-20220915095550005.png)
+
+**在 Vue 3 的组织架构中，响应式独立了出来。而 Vue 2 的响应式只服务于 Vue 2，Vue 3 的响应式就和 Vue 解耦了，你甚至可以在 Node.js 和 React 中使用响应式！**
+
+所以，渲染的逻辑也拆成了**平台无关渲染逻辑**和**浏览器渲染 API**两部分 。
+
+正是这样，在这个架构下，Node 的一些库，甚至 React 都可以依赖响应式。在任何时候，如果你希望数据被修改了之后能通知你，你都可以单独依赖 Vue 3 的响应式！
+
+在你想使用 Vue 3 开发小程序、开发 canvas 小游戏以及开发客户端的时候，就不用全部 fork Vue 的代码，只需要实现平台的渲染逻辑就可以。
+
+<img src="C:\Users\Dell\AppData\Roaming\Typora\typora-user-images\image-20220915100021302.png" alt="image-20220915100021302" style="zoom: 50%;" />
+
+**Vue 3 的 响应式、编译和运行时几部分组合在一起就是运行在浏览器端的 Vue 3，每个模块又都可以独立扩展出新的功能，独立使用！**
+
+
+
+#### 全部模块使用 TypeScript 重构(了解)
+
+类型系统带来了更方便的提示，并且让我们的代码能够更健壮。
+
+```
+let name:string = '我是个靓仔'
+name = 1 // 报错
+interface Person {
+    name: string;
+    age: number;
+}
+let me:Person = {
+  name:'靓仔圣',
+  age:18
+}
+
+me.age = '整条街' // 报错
+```
+
+意义：定义一个类型 Person，里面的变量 name 是字符串类型，变量 age 是数字类型。违反这个设置的数据就报错，**这在多人协同和长期维护的项目里带来的收益是巨大的，因为这样可以使错误的代码在编译阶段就被发现，从而避免程序上线运行后，可能会发生的更大的异常错误。**
+
+大部分开源的框架都会引入类型系统，来对 JavaScript 进行限制。这样做的原因，就是我们前面提到的两点：**第一点是，类型系统带来了更方便的提示；第二点是，类型系统让代码更健壮。**
+
+更多好处之后讲
+
+
+
+#### Composition API 组合语法*(之后学习的重点)
+
+即组合API
+
+![image-20220915101557095](C:\Users\Dell\AppData\Roaming\Typora\typora-user-images\image-20220915101557095.png)
+
+可看官网：[简介 | Vue.js (vuejs.org)](https://cn.vuejs.org/guide/introduction.html#api-styles)    （对着URL，按着Ctrl，再点就可以跳转了）
+
+这里大圣老师的课程中组合API的代码比较繁琐，和当前官网不一样了，官网的setup是写在<scripe>标签中的，更合理（大圣老师的课是2021/10，现在2022/9，快一年了，而Vue 3 作为新版本肯定迭代快，所以肯定不一样了）
+
+这说明：**看完课程后，一定一定要去把官方文档再刷一遍！！！找出更新；但凡更新的肯定是更简便更合理，别担心。**
+
+<img src="C:\Users\Dell\AppData\Roaming\Typora\typora-user-images\image-20220915102536987.png" alt="image-20220915102536987" style="zoom:67%;" />
+
+组合式风格更清爽
+
+
+
+#### 新的组件*(之后学习的重点)
+
+Vue 3 还内置了 Fragment、Teleport 和 Suspense 三个新组件。这个倒不难，项目中用到的时候会详细剖析，现在只需要这仨是啥就行，以及它们的用途即可
+
+* Fragment: **Vue 3 组件不再要求有一个唯一的根节点，清除了很多无用的占位 div。**
+
+* Teleport: 允许组件渲染在别的元素内，主要开发弹窗组件的时候特别有用。
+
+* Suspense: 异步组件，更方便开发有异步请求的组件。
+
+
+
+#### 新一代工程化工具 Vite*(之后学习的重点)
+
+Vite 不在 Vue 3 的代码包内，和 Vue 也不是强绑定，Vite 的竞品是 Webpack，而且按照现在的趋势看，使用率超过 Webpack 也是早晚的事。
+
+Webpack 等工程化工具的原理，就是根据你的 import 依赖逻辑，形成一个依赖图，然后调用对应的处理工具，把整个项目打包后，放在内存里再启动调试。由于要预打包，所以复杂项目的开发，启动调试环境需要 3 分钟都很常见
+
+Vite 就是为了解决这个时间资源的消耗问题出现的，主要提升的是开发的体验
+
+现代浏览器已经默认支持了 ES6 的 import 语法，Vite 就是基于这个原理来实现的。具体来说，在调试环境下，我们不需要全部预打包，只是把你首页依赖的文件，依次通过网络请求去获取，整个开发体验得到巨大提升，做到了复杂项目的秒级调试和热更新。
+
+Webpack 的工作原理，Webpack 要把所有路由的依赖打包后，才能开始调试：
+
+<img src="C:\Users\Dell\AppData\Roaming\Typora\typora-user-images\image-20220915105504366.png" alt="image-20220915105504366" style="zoom:50%;" />
+
+下图所示的是 Vite 的工作原理，一开始就可以准备联调，然后根据首页的依赖模块，再去按需加载，这样启动调试所需要的资源会大大减少：
+
+<img src="C:\Users\Dell\AppData\Roaming\Typora\typora-user-images\image-20220915105541770.png" alt="image-20220915105541770" style="zoom:50%;" />
+
+虽然vue-cli可用于Vue 2 和 Vue 3 ，但是新项目，就使用Vue 3 + Vite
+
+总结：
+
+<img src="C:\Users\Dell\AppData\Roaming\Typora\typora-user-images\image-20220915105725095.png" alt="image-20220915105725095" style="zoom:67%;" />
+
+<hr>
+
+本节单词：
+
+proxy：代理
+
+defineProperty --> define 定义，property 属性
+
+composition：组成、组合；作品，作文

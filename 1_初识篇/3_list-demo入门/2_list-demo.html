@@ -1,0 +1,45 @@
+<!-- 清单应用虽然看起来简单，不过麻雀虽小，五脏俱全。
+  其实不管入门哪个框架，都可以写一个清单，来上手体验一下。 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+    </style>
+</head>
+<body>
+<div id="app">
+  <!-- 第一步：实现一个任务清单，输入任务内容后按回车键会任务添加到下方列表中 -->
+  
+  <!-- @keydown.enter，enter回车键触发 -->
+  <input type="text" v-model="todoItem" @keydown.enter="addTodo">
+  <ul>
+    <li v-for="item of todoList">{{item}}</li>
+  </ul>
+</div>
+<script src="https://unpkg.com/vue@3"></script>
+<script>
+  const { createApp } = Vue
+  createApp({
+    data() {
+      return {
+        todoItem: '',
+        todoList: ['任务一','任务二']
+      }
+    },
+    methods: {
+      addTodo(){
+        if(this.todoItem === ''){
+          alert('请输入内容再回车添加')
+        }else{
+          this.todoList.push(this.todoItem);
+          // 添加后清空输入框
+          this.todoItem = '';
+        }
+      }
+    }
+  }).mount('#app')
+</script>
+</body>
+</html>

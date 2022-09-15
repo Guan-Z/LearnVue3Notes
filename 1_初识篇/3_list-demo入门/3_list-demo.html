@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+      .done_syle{
+        text-decoration: line-through;
+        color: #cccccc;
+      }
+    </style>
+</head>
+<body>
+<div id="app">
+  <!-- 第二步：实现任务完成可勾选，并添加删除样式 -->
+  <!-- 知识点：Vue动态绑定样式 -->
+  <!-- 只是把元素改为对象，添加了一个key，就解决了勾选和动态样式 -->
+
+  
+  <!-- 再添加一个功能：显示一下列表项目中没完成的项目的比例，并添加一个全选勾选 -->
+  <!-- 知识点：计算属性computed -->
+
+  <input type="text" v-model="todoItem" @keydown.enter="addTodo">
+  <ul v-if="todoList.length > 0">
+    <li v-for="item of todoList">
+      <input type="checkbox" v-model="item.done">
+      <!-- Vue动态绑定样式 -->
+      <span :class="{done_syle:item.done}">{{item.title}}</span>
+    </li>
+  </ul>
+  <p v-else>暂无数据</p>
+
+  <!-- 这样虽然可以，但是
+  1、首先在{{}}里写JS表达式可读性差
+  2、性能不好；而放在 计算属性 中只有数据该改变了才会调用执行，性能得到节约
+  <div>
+    <span>剩余任务/总任务：</span>
+    {{todoList.filter(v=>!v.done).length}} 
+    /
+    {{todoList.length}}
+  </div> -->
+
+  <div>
+    <span>剩余任务/总任务：</span>
+    <!-- 在模板里可以直接当做数据来用 -->
+    {{active}}/{{all}}
+  </div>
+  <div>
+    全选<input type="checkbox" v-model="allDone">
+  </div>
+  <div>
+    <button @click="deleteTodo">清除</button>
+  </div>
+</div>
+<script src="https://unpkg.com/vue@3"></script>
+<script>
+  const { createApp } = Vue
+  createApp({
+    data() {
+      return {
+        todoItem: '',
+        // 把元素修改为对象
+        todoList: [
+          {title:'任务一', done:true},
+          {title:'任务二', done:false},
+          {title:'任务三', done:false}
+        ]
+      }
+    },
+    methods: {
+      addTodo(){
+        if(this.todoItem === ''){
+          alert('请输入内容再回车添加')
+        }else{
+          // 修改为添加对象
+          this.todoList.push(
+            {
+              title:this.todoItem,
+              done:false
+            }
+          );
+          this.todoItem = '';
+        }
+      },
+      deleteTodo(){
+        // 数组多用这些方法，可以用这些就不要去for
+        this.todoList = this.todoList.filter(v=>!v.done);
+      }
+    },
+    computed:{
+      // 计算属性：这两个函数返回的计算后的值，在模板里可以直接当做数据来用
+
+      /* 
+        而且 computed 计算属性还内置了缓存功能，如果依赖数据没变化，
+      多次使用计算属性会直接返回缓存结果，直接写在模板里相比，性能也有了提升。
+      */
+      active(){
+        return this.todoList.filter(v=>!v.done).length
+      },
+      all(){
+        return this.todoList.length
+      },
+
+      // 计算属性不仅可以用来返回数据，有些时候我们也需要修改计算属性
+
+      // 这时候 computed 的配置就不能是函数了，要变成一个-----对象-----，
+      // 分别实现 get 和 set 函数，get 就是之前的返回值，set 就是修改计算属性要执行的函数。
+
+      // 全选勾选实现：
+      allDone: {
+        get: function () {
+          // data和computed里的都是this.xxx；computed计算属性中的函数就像data中的数据一样用
+          return this.active === 0
+        },
+        set: function (val) {
+          this.todoList.forEach(todo=>{
+            todo.done = val
+          });
+        }
+      }
+    }
+  }).mount('#app')
+</script>
+</body>
+</html>
+<!-- 
+需要二次计算的数据，这在我们开发的需求中很常见。
+此外，在模板里面写 JS，看起来代码也很乱。
+Vue 针对这种情况，设计了一个功能，也就是计算属性。 
+
+因为使用方式一样都是放在{{}}中，如果data和computed中同名了，则
+使用data中，并报错：计算属性xxx在data中已定义
+
+和函数的区别：
+函数触发调用，Vue封装的计算属性是数据变化自动执行
+-->

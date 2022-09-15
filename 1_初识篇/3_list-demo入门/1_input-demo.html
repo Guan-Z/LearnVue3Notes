@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+    </style>
+</head>
+<body>
+<div id="app">
+  <input type="text" v-model="title">
+  <h1>内容：{{title}}</h1>
+</div>
+<script src="https://unpkg.com/vue@3"></script>
+<script>
+  // Vue3的写法和Vue2不同了
+  const { createApp } = Vue
+  createApp({
+    data() {
+      return {
+        title: ''
+      }
+    }
+  }).mount('#app')
+</script>
+</body>
+</html>
+<!-- 学习 Vue 时，首先要做的是转变思路。
+比如，我们想做一个输入框，里面输入的任何数据都会在页面上同步显示。对于这样一个前端的功能:
+  jQuery 开发的思路是：
+  1、先找到输入框，给输入框绑定输入事件；
+  2、输入的同时，我们获取输入的值；
+  3、再找到对应的 html 标签，更新标签的内容。
+  (jQuery 时代的开发逻辑，就是我们先要找到目标元素，然后再进行对应的修改。)
+
+  学习 Vue.js，首先就要进行思想的升级
+  也就是说，不要再思考页面的元素怎么操作，而是要思考数据是怎么变化的。
+  这就意味着，我们只需要操作数据，至于数据和页面的同步问题，Vue 会帮我们处理。
+  Vue的思路：
+  1、先在代码的 data 里声明数据
+  2、在输入框的代码里，使用 v-model 来标记输入框和数据的同步
+  3、在 HTML 模板里，使用两个花括号标记，来显示数据，例如{{title}}。 -->
