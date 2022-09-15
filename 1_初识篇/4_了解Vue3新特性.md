@@ -2,7 +2,7 @@
 
 先看看Vue2：
 
-![image-20220914174703597](C:\Users\Dell\AppData\Roaming\Typora\typora-user-images\image-20220914174703597.png)
+![image-20220914174703597](..\typora-user-images\image-20220914174703597.png)
 
 * Vue 2 响应式并不是真正意义上的代理，而是基于 Object.defineProperty() 实现的。对于 Object.defineProperty() 这个 API 的细节，在后面讲源码时会讲到，现在只需要知道这个 API 并不是代理，而是对某个属性进行拦截，所以有很多缺陷，比如：删除数据就无法监听，需要 $delete 等 API 辅助才能监听到。
 
@@ -68,7 +68,7 @@ Vue 2 内部所有的模块都是揉在一起的，导致扩展性不好
 
 Vue 3 是怎么解决这个问题的呢？那就是拆包，使用最近流行的 monorepo 管理方式，响应式、编译和运行时全部独立了，变成下图所示的模样：
 
-![image-20220915095550005](C:\Users\Dell\AppData\Roaming\Typora\typora-user-images\image-20220915095550005.png)
+![image-20220915095550005](..\typora-user-images\image-20220915095550005.png)
 
 **在 Vue 3 的组织架构中，响应式独立了出来。而 Vue 2 的响应式只服务于 Vue 2，Vue 3 的响应式就和 Vue 解耦了，你甚至可以在 Node.js 和 React 中使用响应式！**
 
@@ -78,7 +78,7 @@ Vue 3 是怎么解决这个问题的呢？那就是拆包，使用最近流行�
 
 在你想使用 Vue 3 开发小程序、开发 canvas 小游戏以及开发客户端的时候，就不用全部 fork Vue 的代码，只需要实现平台的渲染逻辑就可以。
 
-<img src="C:\Users\Dell\AppData\Roaming\Typora\typora-user-images\image-20220915100021302.png" alt="image-20220915100021302" style="zoom: 50%;" />
+<img src="..\typora-user-images\image-20220915100021302.png" alt="image-20220915100021302" style="zoom: 50%;" />
 
 **Vue 3 的 响应式、编译和运行时几部分组合在一起就是运行在浏览器端的 Vue 3，每个模块又都可以独立扩展出新的功能，独立使用！**
 
@@ -115,7 +115,7 @@ me.age = '整条街' // 报错
 
 即组合API
 
-![image-20220915101557095](C:\Users\Dell\AppData\Roaming\Typora\typora-user-images\image-20220915101557095.png)
+![image-20220915101557095](..\typora-user-images\image-20220915101557095.png)
 
 可看官网：[简介 | Vue.js (vuejs.org)](https://cn.vuejs.org/guide/introduction.html#api-styles)    （对着URL，按着Ctrl，再点就可以跳转了）
 
@@ -123,7 +123,7 @@ me.age = '整条街' // 报错
 
 这说明：**看完课程后，一定一定要去把官方文档再刷一遍！！！找出更新；但凡更新的肯定是更简便更合理，别担心。**
 
-<img src="C:\Users\Dell\AppData\Roaming\Typora\typora-user-images\image-20220915102536987.png" alt="image-20220915102536987" style="zoom:67%;" />
+<img src="..\typora-user-images\image-20220915102536987.png" alt="image-20220915102536987" style="zoom:67%;" />
 
 组合式风格更清爽
 
@@ -153,17 +153,17 @@ Vite 就是为了解决这个时间资源的消耗问题出现的，主要提升
 
 Webpack 的工作原理，Webpack 要把所有路由的依赖打包后，才能开始调试：
 
-<img src="C:\Users\Dell\AppData\Roaming\Typora\typora-user-images\image-20220915105504366.png" alt="image-20220915105504366" style="zoom:50%;" />
+<img src="..\typora-user-images\image-20220915105504366.png" alt="image-20220915105504366" style="zoom:50%;" />
 
 下图所示的是 Vite 的工作原理，一开始就可以准备联调，然后根据首页的依赖模块，再去按需加载，这样启动调试所需要的资源会大大减少：
 
-<img src="C:\Users\Dell\AppData\Roaming\Typora\typora-user-images\image-20220915105541770.png" alt="image-20220915105541770" style="zoom:50%;" />
+<img src="..\typora-user-images\image-20220915105541770.png" alt="image-20220915105541770" style="zoom:50%;" />
 
 虽然vue-cli可用于Vue 2 和 Vue 3 ，但是新项目，就使用Vue 3 + Vite
 
 总结：
 
-<img src="C:\Users\Dell\AppData\Roaming\Typora\typora-user-images\image-20220915105725095.png" alt="image-20220915105725095" style="zoom:67%;" />
+<img src="..\typora-user-images\image-20220915105725095.png" alt="image-20220915105725095" style="zoom:67%;" />
 
 <hr>
 
