@@ -1,0 +1,45 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+    </style>
+</head>
+<body>
+<script>
+  let obj = {};
+  let count = 1;
+  function getDouble(n){
+    return n*2;
+  }
+  let double = getDouble(count);
+  let proxy = new Proxy(obj,{
+      get : function (target,prop) {
+          return target[prop]
+      },
+      set : function (target,prop,value) {
+          target[prop] = value;
+          if(prop==='count'){
+              double = getDouble(value)
+          }
+      },
+      deleteProperty(target,prop){
+          delete target[prop]
+          if(prop==='count'){
+              double = NaN
+          }
+      }
+  })
+  // 数据未变化，还没拦截
+  console.log(obj.count,double);  //undefined 2
+  // 数据改变
+  proxy.count = 2
+  console.log(obj.count,double);  //2 4
+  delete proxy.count
+  // 删除属性后
+  console.log(obj.count,double);  //undefined NaN
+</script>
+</body>
+</html>
