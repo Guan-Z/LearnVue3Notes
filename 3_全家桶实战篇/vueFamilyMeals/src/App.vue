@@ -3,6 +3,18 @@
 // Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
 import HelloWorld from './components/HelloWorld.vue'
 import learnVuex from './components/learnVuex.vue'
+import { onMounted } from 'vue'
+function fn(){
+  console.log(1);
+  console.log(2);
+  // debugger关键字，中断代码执行
+  debugger;
+  console.log(3);
+}
+onMounted(()=>{
+    fn();
+  }
+)
 </script>
 
 <template>
