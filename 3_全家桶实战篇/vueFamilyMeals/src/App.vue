@@ -3,6 +3,7 @@
 // Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
 import HelloWorld from './components/HelloWorld.vue'
 import learnVuex from './components/learnVuex.vue'
+import learnTs from './components/learn_ts.vue'
 import { onMounted } from 'vue'
 function fn(){
   console.log(1);
@@ -21,6 +22,7 @@ onMounted(()=>{
 <template>
   <div>
     <learnVuex></learnVuex>
+    <learnTs></learnTs>
   </div>
 </template>
 
