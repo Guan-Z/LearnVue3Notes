@@ -8,9 +8,10 @@ function fn(){
   console.log(1);
   console.log(2);
   // debugger关键字，中断代码执行
-  debugger;
+  // debugger;
   console.log(3);
 }
+// 组合式的生命周期函数挺怪的，，，
 onMounted(()=>{
     fn();
   }
