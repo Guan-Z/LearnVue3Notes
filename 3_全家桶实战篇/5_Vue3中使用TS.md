@@ -98,57 +98,32 @@ Vue 3 的 Composition API 之后（选项式还是使用this的），没有了 t
 
 Vue 3 中使用TS：首先需要在 script 标签上加一个配置 lang=“ts”，来标记当前组件使用了 TypeScript，然后代码内部使用 defineComponent 定义组件即可。
 
+（也许书写会有改动，当然，还是看官网）
 
+```
+<script lang="ts">
+import { defineComponent } from 'vue'
+export default defineComponent({
+  // 已启用类型推断
+})
+</script>
+```
 
+Vue学习了，TS了解了，就可以了；具体Vue中怎么使用TS的，去做bilibili那个项目，做完自然知道了。
 
+<hr>
 
+学习TS的时候要注意：
 
+TypeScript 是 JavaScript 的一个超集，这两者并不是完全对立的关系。
 
+所以不存在这样的提问：“到底是学 TypeScript 还是 JavaScript？”
 
+学习 TypeScript 和学习 JavaScript 不是二选一的关系，而是打好坚实的 JavaScript 的基础，在维护复杂项目和基础库的时候选择 TypeScript。
 
+**TypeScript 能发展至今，得益于微软，而 JavaScript 的语法则是由 TC39 协会制定的。由于 JavaScript 的发展速度问题，有一些语法的实现细节在 TC39 协会还在讨论的时候，TypeScript 就已经实现了。比较典型的就是装饰器 Decorator 的语法，因为 TC39 在 Decorator 的实现思路上，和 Typescript 不同，未来 TypeScript 的 Decorator 可能会和 JavaScript 的 Decorator 发生冲突。**
 
+所以，以后TS在不在还另说
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+**TypeScript 最终还是要编译成为 JavaScript，并在浏览器里执行。对于浏览器厂商来说，引入类型系统的收益并不太高，毕竟编译需要时间。而过多的编译时间，会影响运行时的性能，所以未来 TypeScript 很难成为浏览器的语言标准。所以我们的核心还是要掌握 JavaScript，在这个基础之上，无论是框架，还是 TypeScript 类型系统，我们都将其作为额外的工具使用，才是我们最佳的选择。**
 
